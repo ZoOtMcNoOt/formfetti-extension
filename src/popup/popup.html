@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="popup.css">
+  <title>Formfetti</title>
+</head>
+<body>
+  <div class="header">
+    <div class="title">Formfetti 🎉</div>
+    <div class="tagline">You did the thing!</div>
+  </div>
+
+  <label class="toggle">
+    <input type="checkbox" id="toggle-checkbox" aria-label="Enable Formfetti">
+    <span class="slider"><span class="knob"></span></span>
+  </label>
+
+  <div class="status" id="status-text">Celebrating submissions!</div>
+
+  <button class="test-btn" id="test-btn">Test Confetti 🎊</button>
+
+  <div class="disclosure-toggle settings-toggle" id="settings-toggle" tabindex="0" role="button" aria-expanded="false" aria-label="Toggle settings">Settings</div>
+  <div class="disclosure-panel settings-panel" id="settings-panel">
+    <div class="settings-panel-inner">
+
+      <!-- Primary settings: Shape, Color Theme, Intensity -->
+      <div class="setting-section">
+        <div class="setting-label">Shape</div>
+        <div class="option-group" data-setting="shape" role="radiogroup" aria-label="Shape">
+          <div class="option-card selected" data-value="classic" tabindex="0" role="radio" aria-checked="true">
+            <div class="card-preview card-preview--shape">■</div>
+            <span>Classic</span>
+          </div>
+          <div class="option-card" data-value="stars" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-preview card-preview--shape">★</div>
+            <span>Stars</span>
+          </div>
+          <div class="option-card" data-value="hearts" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-preview card-preview--shape">❤</div>
+            <span>Hearts</span>
+          </div>
+          <div class="option-card" data-value="emoji" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-preview card-preview--shape">🎉</div>
+            <span>Emoji</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-section">
+        <div class="setting-label">Color Theme</div>
+        <div class="option-group" data-setting="colorTheme" role="radiogroup" aria-label="Color Theme">
+          <div class="option-card selected" data-value="classic" tabindex="0" role="radio" aria-checked="true">
+            <div class="card-preview card-preview--classic"></div>
+            <span>Classic</span>
+          </div>
+          <div class="option-card" data-value="rainbow" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-preview card-preview--rainbow"></div>
+            <span>Rainbow</span>
+          </div>
+          <div class="option-card" data-value="gold" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-preview card-preview--gold"></div>
+            <span>Gold</span>
+          </div>
+          <div class="option-card" data-value="ocean" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-preview card-preview--ocean"></div>
+            <span>Ocean</span>
+          </div>
+          <div class="option-card" data-value="mono" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-preview card-preview--mono"></div>
+            <span>Mono</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-section">
+        <div class="setting-label">Intensity</div>
+        <div class="option-group" data-setting="intensity" role="radiogroup" aria-label="Intensity">
+          <div class="option-card" data-value="low" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-preview card-preview--intensity-low"></div>
+            <span>Subtle</span>
+          </div>
+          <div class="option-card selected" data-value="medium" tabindex="0" role="radio" aria-checked="true">
+            <div class="card-preview card-preview--intensity-medium"></div>
+            <span>Party</span>
+          </div>
+          <div class="option-card" data-value="high" tabindex="0" role="radio" aria-checked="false">
+            <div class="card-preview card-preview--intensity-high"></div>
+            <span>Chaos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- More options disclosure -->
+      <div class="disclosure-toggle more-options-toggle" id="more-options-toggle" tabindex="0" role="button" aria-expanded="false">More options</div>
+      <div class="disclosure-panel more-options-panel" id="more-options-panel">
+        <div class="more-options-inner">
+
+          <div class="dropdown-row">
+            <div>
+              <label for="gravity">Gravity</label>
+              <select id="gravity">
+                <option value="0.4">Floaty</option>
+                <option value="1" selected>Normal</option>
+                <option value="2">Heavy</option>
+              </select>
+            </div>
+            <div>
+              <label for="size">Size</label>
+              <select id="size">
+                <option value="small">Small</option>
+                <option value="medium" selected>Medium</option>
+                <option value="large">Large</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-section">
+            <div class="setting-label">Toast Message</div>
+            <input type="text" id="toast-message" class="toast-input" placeholder="You did the thing!" maxlength="40">
+          </div>
+
+        </div><!-- /.more-options-inner -->
+      </div>
+
+    </div><!-- /.settings-panel-inner -->
+  </div>
+
+  <script src="../../lib/motion.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

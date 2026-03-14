@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formfetti Test Page</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f5f5f7; color: #1d1d1f; padding: 40px 20px; }
+    h1 { text-align: center; margin-bottom: 8px; }
+    .subtitle { text-align: center; color: #86868b; margin-bottom: 40px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; max-width: 1100px; margin: 0 auto; }
+    .card { background: #fff; border-radius: 16px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .card h2 { font-size: 18px; margin-bottom: 4px; }
+    .card .expect { font-size: 13px; color: #86868b; margin-bottom: 16px; }
+    .expect .yes { color: #34c759; font-weight: 600; }
+    .expect .no { color: #ff3b30; font-weight: 600; }
+    .expect .maybe { color: #ff9500; font-weight: 600; }
+    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 4px; margin-top: 12px; }
+    input, textarea, select { width: 100%; padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 8px; font-size: 14px; font-family: inherit; }
+    textarea { resize: vertical; min-height: 60px; }
+    button[type="submit"], .ajax-btn { margin-top: 16px; width: 100%; padding: 10px; border: none; border-radius: 8px; background: #0071e3; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; }
+    button[type="submit"]:hover, .ajax-btn:hover { background: #0077ed; }
+    .result { margin-top: 12px; padding: 10px; border-radius: 8px; background: #f0fdf4; color: #166534; font-size: 14px; display: none; }
+    hr { border: none; border-top: 1px solid #e5e5ea; margin: 40px auto; max-width: 1100px; }
+    .section-title { text-align: center; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #86868b; margin-bottom: 24px; }
+    .how { font-size: 12px; color: #0071e3; background: #f0f4ff; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+<h1>Formfetti Test Page</h1>
+<p class="subtitle">Each card tests a different detection scenario. Fill out fields, then submit.</p>
+
+<!-- ===================== REAL FORM SUBMISSIONS ===================== -->
+<div class="section-title">Real Form Submissions (page navigates back here)</div>
+<div class="grid">
+
+  <!-- 1. Registration form -->
+  <div class="card">
+    <h2>Registration Form</h2>
+    <p class="expect">Expected: <span class="yes">Confetti</span> — when filled out and submitted</p>
+    <p class="how">Submits via real form POST, page reloads. Fill fields first!</p>
+    <form method="POST" action="">
+      <label>Full Name</label><input type="text" name="name" placeholder="Jane Doe">
+      <label>Email</label><input type="email" name="email" placeholder="jane@example.com">
+      <label>Password</label><input type="password" name="pass" placeholder="••••••••">
+      <label>Confirm Password</label><input type="password" name="pass2" placeholder="••••••••">
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+
+  <!-- 2. Contact form -->
+  <div class="card">
+    <h2>Contact Form</h2>
+    <p class="expect">Expected: <span class="yes">Confetti</span> — when filled out and submitted</p>
+    <p class="how">Submits via real form POST, page reloads. Fill fields first!</p>
+    <form method="POST" action="">
+      <label>Name</label><input type="text" name="name" placeholder="Your name">
+      <label>Email</label><input type="email" name="email" placeholder="you@example.com">
+      <label>Subject</label><input type="text" name="subject" placeholder="Subject">
+      <label>Message</label><textarea name="msg" placeholder="Your message..."></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <!-- 3. Empty form -->
+  <div class="card">
+    <h2>Empty Registration (don't fill!)</h2>
+    <p class="expect">Expected: <span class="no">No confetti</span> — fields are empty, not a real submission</p>
+    <p class="how">Click submit without filling anything. Should NOT celebrate.</p>
+    <form method="POST" action="">
+      <label>Full Name</label><input type="text" name="name" placeholder="Jane Doe">
+      <label>Email</label><input type="email" name="email" placeholder="jane@example.com">
+      <label>Password</label><input type="password" name="pass" placeholder="••••••••">
+      <label>Confirm Password</label><input type="password" name="pass2" placeholder="••••••••">
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+
+</div>
+
+<hr>
+
+<!-- ===================== SPA / AJAX SUBMISSIONS ===================== -->
+<div class="section-title">SPA / AJAX Submissions (page stays, sends fetch)</div>
+<div class="grid">
+
+  <!-- 4. AJAX checkout — sends real fetch POST -->
+  <div class="card">
+    <h2>AJAX Checkout</h2>
+    <p class="expect">Expected: <span class="yes">Confetti</span> — POST to /api/checkout with 2xx</p>
+    <p class="how">preventDefault + fetch(). Detected via AJAX interceptor.</p>
+    <form id="ajax-checkout" onsubmit="return handleAjaxSubmit(event, '/api/checkout')">
+      <label>Card Number</label><input type="text" placeholder="4242 4242 4242 4242" value="4242 4242 4242 4242">
+      <label>Expiry</label><input type="text" placeholder="12/28" value="12/28">
+      <label>CVC</label><input type="text" placeholder="123" value="123">
+      <button type="submit">Complete Order</button>
+    </form>
+    <div class="result" id="result-checkout"></div>
+  </div>
+
+  <!-- 5. AJAX contact — sends real fetch POST -->
+  <div class="card">
+    <h2>AJAX Contact Submit</h2>
+    <p class="expect">Expected: <span class="yes">Confetti</span> — POST to /api/contact/submit</p>
+    <p class="how">preventDefault + fetch(). Detected via AJAX interceptor.</p>
+    <form id="ajax-contact" onsubmit="return handleAjaxSubmit(event, '/api/contact/submit')">
+      <label>Name</label><input type="text" placeholder="Jane" value="Jane Doe">
+      <label>Email</label><input type="email" placeholder="jane@ex.com" value="jane@example.com">
+      <label>Message</label><textarea placeholder="Hello!">Thanks for the great product!</textarea>
+      <button type="submit">Send Message</button>
+    </form>
+    <div class="result" id="result-contact"></div>
+  </div>
+
+  <!-- 6. AJAX search — should NOT celebrate -->
+  <div class="card">
+    <h2>AJAX Search</h2>
+    <p class="expect">Expected: <span class="no">No confetti</span> — URL contains "search"</p>
+    <p class="how">preventDefault + fetch() to /api/search. AJAX heuristics rejects it.</p>
+    <form id="ajax-search" onsubmit="return handleAjaxSubmit(event, '/api/search')">
+      <label>Query</label><input type="text" placeholder="Search products..." value="cool stuff">
+      <button type="submit">Search</button>
+    </form>
+    <div class="result" id="result-search"></div>
+  </div>
+
+  <!-- 7. AJAX empty form — should NOT celebrate -->
+  <div class="card">
+    <h2>AJAX Empty Submit</h2>
+    <p class="expect">Expected: <span class="no">No confetti</span> — form is empty</p>
+    <p class="how">preventDefault + fetch(). Even though URL triggers, nothing was filled.</p>
+    <form id="ajax-empty" onsubmit="return handleAjaxSubmit(event, '/api/contact/submit')">
+      <label>Name</label><input type="text" placeholder="Jane">
+      <label>Email</label><input type="email" placeholder="jane@example.com">
+      <label>Message</label><textarea placeholder="Your message..."></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+    <div class="result" id="result-empty"></div>
+  </div>
+
+</div>
+
+<hr>
+
+<!-- ===================== SHOULD NOT CELEBRATE ===================== -->
+<div class="section-title">Should NOT Celebrate (structure-based rejection)</div>
+<div class="grid">
+
+  <!-- 8. Search form -->
+  <div class="card">
+    <h2>Search Form</h2>
+    <p class="expect">Expected: <span class="no">No confetti</span> — role="search", search input</p>
+    <form role="search" method="GET" action="">
+      <label>Search</label><input type="search" name="q" placeholder="Search anything..." value="test query">
+      <button type="submit">Go</button>
+    </form>
+  </div>
+
+  <!-- 9. Login form -->
+  <div class="card">
+    <h2>Login Form</h2>
+    <p class="expect">Expected: <span class="no">No confetti</span> — single password, only 2 inputs</p>
+    <form method="POST" action="">
+      <label>Email</label><input type="email" name="email" placeholder="you@example.com" value="me@test.com">
+      <label>Password</label><input type="password" name="pass" placeholder="••••••••" value="hunter2">
+      <button type="submit">Log In</button>
+    </form>
+  </div>
+
+  <!-- 10. Filter form -->
+  <div class="card">
+    <h2>Filter / Sort</h2>
+    <p class="expect">Expected: <span class="no">No confetti</span> — "Filter" button + search action</p>
+    <form action="/search" method="GET">
+      <label>Category</label>
+      <select name="cat"><option>All</option><option>Electronics</option><option>Books</option></select>
+      <label>Price Range</label>
+      <select name="price"><option>Any</option><option>$0-$50</option><option>$50-$100</option></select>
+      <button type="submit">Filter</button>
+    </form>
+  </div>
+
+</div>
+
+<hr>
+
+<!-- ===================== MULTI-STEP FORMS ===================== -->
+<div class="section-title">Multi-Step Form (should only celebrate at the end)</div>
+<div class="grid">
+
+  <!-- 11. Multi-step checkout -->
+  <div class="card" id="multistep-card">
+    <h2>3-Step Checkout</h2>
+    <p class="expect">Expected: <span class="yes">Confetti only on Step 3</span> — intermediate steps show "confirm your" text</p>
+    <p class="how">Steps 1-2 show review/confirm language. Step 3 shows "Thank you! Order placed."</p>
+
+    <!-- Step 1: Shipping -->
+    <div id="step-1">
+      <p style="font-size:12px; color:#0071e3; margin-bottom:8px;">Step 1 of 3: Shipping</p>
+      <form onsubmit="event.preventDefault(); goToStep(2);">
+        <label>Full Name</label><input type="text" value="Jane Doe">
+        <label>Address</label><input type="text" value="123 Main St">
+        <label>City</label><input type="text" value="Springfield">
+        <button type="submit">Continue to Payment →</button>
+      </form>
+    </div>
+
+    <!-- Step 2: Payment + Review -->
+    <div id="step-2" style="display:none;">
+      <p style="font-size:12px; color:#0071e3; margin-bottom:8px;">Step 2 of 3: Confirm your order</p>
+      <form onsubmit="event.preventDefault(); goToStep(3);">
+        <label>Card Number</label><input type="text" value="4242 4242 4242 4242">
+        <label>Expiry</label><input type="text" value="12/28">
+        <button type="submit">Confirm & Place Order</button>
+      </form>
+    </div>
+
+    <!-- Step 3: Success -->
+    <div id="step-3" style="display:none;"></div>
+    <div class="result" id="result-multistep"></div>
+  </div>
+
+  <!-- 12. Borderline form + success text -->
+  <div class="card">
+    <h2>Borderline + Success Text</h2>
+    <p class="expect">Expected: <span class="maybe">Maybe confetti</span> — borderline form, then "Thank you" appears after 1s</p>
+    <p class="how">preventDefault, no fetch. MutationObserver watches for success text.</p>
+    <form onsubmit="event.preventDefault(); showSuccessText();">
+      <label>Quick Feedback</label><input type="text" placeholder="Any thoughts?" value="Great site!">
+      <label>Rating</label>
+      <select><option>5 stars</option><option>4 stars</option><option>3 stars</option></select>
+      <button type="submit">Submit Feedback</button>
+    </form>
+    <div class="result" id="result-borderline"></div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ===================== ACCESSIBILITY ===================== -->
+<div class="section-title">Accessibility</div>
+<div class="grid">
+  <div class="card">
+    <h2>Reduced Motion Test</h2>
+    <p class="expect">Enable <code>prefers-reduced-motion: reduce</code> in DevTools → Rendering.<br>
+    Expected: Toast only, no particle animation.</p>
+    <form method="POST" action="">
+      <label>Name</label><input type="text" name="name" placeholder="Jane Doe" value="Jane Doe">
+      <label>Email</label><input type="email" name="email" placeholder="jane@ex.com" value="jane@example.com">
+      <label>Phone</label><input type="tel" name="phone" placeholder="555-1234" value="555-1234">
+      <label>Message</label><textarea name="msg" placeholder="Testing...">Testing reduced motion support</textarea>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Mock server: intercept fetch to return 200 for test URLs
+  const _origFetch = window.fetch;
+  window.fetch = function(url, opts) {
+    if (typeof url === 'string' && url.startsWith('/api/')) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(new Response(JSON.stringify({ ok: true }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          }));
+        }, 300);
+      });
+    }
+    return _origFetch.apply(this, arguments);
+  };
+
+  // SPA form handler: preventDefault + fetch
+  function handleAjaxSubmit(e, url) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ test: true }),
+    })
+    .then(r => r.json())
+    .then(() => {
+      const card = e.target.closest('.card');
+      const result = card.querySelector('.result');
+      if (result) {
+        result.style.display = 'block';
+        // Use success text that the MutationObserver will detect
+        result.textContent = 'Thank you! Your submission was received successfully.';
+      }
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = 'Try Again';
+    });
+
+    return false;
+  }
+
+  // Multi-step checkout: step 1 → step 2 → success
+  function goToStep(step) {
+    document.getElementById('step-1').style.display = 'none';
+    document.getElementById('step-2').style.display = 'none';
+    document.getElementById('step-3').style.display = 'none';
+
+    if (step <= 2) {
+      document.getElementById('step-' + step).style.display = 'block';
+    } else {
+      // Final step — show success message (this triggers the MutationObserver)
+      const el = document.getElementById('step-3');
+      el.style.display = 'block';
+      setTimeout(() => {
+        const heading = document.createElement('p');
+        heading.style.cssText = 'font-size:20px;font-weight:bold;text-align:center;padding-top:20px;';
+        heading.textContent = 'Thank you! Order placed.';
+        const conf = document.createElement('p');
+        conf.style.cssText = 'color:#86868b;margin-top:8px;text-align:center;padding-bottom:20px;';
+        conf.textContent = 'Confirmation #FM-' + Math.floor(Math.random() * 90000 + 10000);
+        el.appendChild(heading);
+        el.appendChild(conf);
+      }, 500);
+    }
+  }
+
+  // Inject success text after borderline form submit (MutationObserver test)
+  function showSuccessText() {
+    setTimeout(() => {
+      const result = document.getElementById('result-borderline');
+      result.style.display = 'block';
+      result.textContent = 'Thank you! Your feedback has been submitted successfully.';
+    }, 1000);
+  }
+</script>
+
+</body>
+</html>
