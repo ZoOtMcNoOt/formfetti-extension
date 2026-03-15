@@ -106,10 +106,10 @@ Manages the enabled/disabled state and toolbar badge. Responds to `GET_STATE` an
 │  Page (ISOLATED world)                                      │
 │                                                             │
 │  content.js ──────► listens for submit events               │
-│                     listens for AJAX messages                │
-│                     watches DOM for success text             │
-│                     manages pendingCelebration flag          │
-│                     injects confetti-runner.js when needed   │
+│                     listens for AJAX messages               │
+│                     watches DOM for success text            │
+│                     manages pendingCelebration flag         │
+│                     injects confetti-runner.js when needed  │
 └─────────────┬───────────────────────────────────────────────┘
               │ chrome.runtime.sendMessage
 ┌─────────────▼───────────────────────────────────────────────┐
